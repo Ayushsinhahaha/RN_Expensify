@@ -54,7 +54,9 @@ const HomeScreen = ({navigation}) => {
       {/* recent trip header */}
       <View style={styles.tripHeader}>
         <Text style={styles.tripText}>Recent Trips</Text>
-        <TouchableOpacity onPress={()=>navigation.navigate('AddTrip')} style={styles.addTrip}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('AddTrip')}
+          style={styles.addTrip}>
           <Text style={styles.addTripText}>Add Trip</Text>
         </TouchableOpacity>
       </View>
@@ -73,7 +75,9 @@ const HomeScreen = ({navigation}) => {
         }}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => navigation.navigate('TripExpense', {item})}>
               <View>
                 <Image source={randomImage()} style={styles.cardImage} />
                 <Text style={styles.placeText}>{item.place}</Text>
