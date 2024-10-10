@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 import React from 'react';
 import randomImage from '../assets/images/randomImage';
+import EmptyList from '../components/emptyList';
 
 const items = [
   {
     id: 1,
     place: 'Noida',
-    state: 'UP',
+    state: 'Uttar Pradesh',
   },
   {
     id: 2,
@@ -33,7 +34,7 @@ const items = [
   },
 ];
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* header */}
@@ -53,7 +54,7 @@ const HomeScreen = () => {
       {/* recent trip header */}
       <View style={styles.tripHeader}>
         <Text style={styles.tripText}>Recent Trips</Text>
-        <TouchableOpacity style={styles.addTrip}>
+        <TouchableOpacity onPress={()=>navigation.navigate('AddTrip')} style={styles.addTrip}>
           <Text style={styles.addTripText}>Add Trip</Text>
         </TouchableOpacity>
       </View>
@@ -63,6 +64,9 @@ const HomeScreen = () => {
         data={items}
         numColumns={2}
         keyExtractor={item => item.id}
+        ListEmptyComponent={
+          <EmptyList message={"You haven't recorded any trips yet"} />
+        }
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{
           justifyContent: 'space-between',
@@ -71,10 +75,7 @@ const HomeScreen = () => {
           return (
             <TouchableOpacity style={styles.card}>
               <View>
-                <Image
-                  source={randomImage()}
-                  style={styles.cardImage}
-                />
+                <Image source={randomImage()} style={styles.cardImage} />
                 <Text style={styles.placeText}>{item.place}</Text>
                 <Text style={styles.stateText}>{item.state}</Text>
               </View>
@@ -163,10 +164,10 @@ const styles = StyleSheet.create({
   },
   stateText: {
     textAlign: 'center',
-    fontWeight:'600',
-    marginBottom:10,
-    fontSize:14,
-    color:'grey'
+    fontWeight: '600',
+    marginBottom: 10,
+    fontSize: 14,
+    color: 'grey',
   },
   card: {
     borderWidth: 1,
@@ -175,6 +176,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 1,
     margin: 5,
-    backgroundColor:'#fff'
+    backgroundColor: '#fff',
   },
 });

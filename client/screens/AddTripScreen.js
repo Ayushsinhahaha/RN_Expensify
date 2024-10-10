@@ -1,0 +1,132 @@
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const AddTripScreen = ({navigation}) => {
+    const [place,setPlace]=useState('')
+    const [state,setState]=useState('')
+
+    const handleAddTrip =() => {
+        if(place && state){
+            navigation.navigate('Home',{place,state})
+        }else{
+
+        }
+    }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Add Trip</Text>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.arrow}>
+          <Icon name="arrow-left" size={40} color={'#000'} />
+        </TouchableOpacity>
+      </View>
+      {/* Image */}
+      <View style={styles.imgContainer}>
+        <Image
+          source={require('../assets/images/4.png')}
+          style={styles.image}
+        />
+      </View>
+
+      {/* TextInputs */}
+      <View style={styles.textContainer}>
+        <Text style={styles.textInput}>Which Place?</Text>
+        <TextInput value={place} onChangeText={txt=>setPlace(txt)} style={styles.input}></TextInput>
+        <Text style={styles.textInput}>Which State?</Text>
+        <TextInput value={state} onChangeText={txt=>setState(txt)} style={styles.input}></TextInput>
+      </View>
+
+      {/* Add Button */}
+      <View style={{alignItems: 'center'}}>
+        <TouchableOpacity onPress={()=>handleAddTrip()} style={styles.inputBtn}>
+          <Text style={styles.inputText}>Add Trip</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default AddTripScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    height: 70,
+    width: '100%',
+    // backgroundColor: 'grey',
+    justifyContent: 'center',
+    flexDirection: 'row-reverse',
+
+    // alignItems:'center'
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: '900',
+    color: '#000',
+    top: 15,
+  },
+  arrow: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    left: 10,
+    top: 10,
+  },
+  imgContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  image: {
+    height: 300,
+    width: 300,
+  },
+  textContainer: {
+    alignItems: 'center',
+  },
+  textInput: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#000',
+    marginTop: 10,
+},
+input: {
+    width: '90%',
+    borderWidth: 2,
+    borderRadius: 20,
+    backgroundColor: '#fff',
+    marginTop: 10,
+    textAlign:'center'
+  },
+  inputText: {
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: '900',
+  },
+  inputBtn: {
+    marginTop: 200,
+    borderWidth: 1,
+    width: '80%',
+    alignItems: 'center',
+    borderRadius: 20,
+    justifyContent: 'center',
+    height: 60,
+    backgroundColor:'dodgerblue'
+    // left:50
+  },
+});
