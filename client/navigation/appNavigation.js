@@ -10,56 +10,63 @@ import TripExpensesScreen from '../screens/TripExpensesScreen';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
+import {useSelector} from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 const appNavigation = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="WelcomeScreen">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="AddTrip"
-          component={AddTripScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="AddExpense"
-          component={AddExpenseScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="TripExpense"
-          component={TripExpensesScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="WelcomeScreen"
-          component={WelcomeScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignIn"
-          component={SignIn}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  const user = useSelector(state => state.user);
+
+  if (user) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddTrip"
+            component={AddTripScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddExpense"
+            component={AddExpenseScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="TripExpense"
+            component={TripExpensesScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="WelcomeScreen">
+          <Stack.Screen
+            name="WelcomeScreen"
+            component={WelcomeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SignIn"
+            component={SignIn}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 };
 
 export default appNavigation;

@@ -10,6 +10,13 @@ import {
 import React from 'react';
 import randomImage from '../assets/images/randomImage';
 import EmptyList from '../components/emptyList';
+import {useSelector} from 'react-redux';
+
+// const signOut = () => {
+//   return(
+
+//   )
+// };
 
 const items = [
   {
@@ -35,6 +42,8 @@ const items = [
 ];
 
 const HomeScreen = ({navigation}) => {
+  const user = useSelector(state => state.user);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* header */}
