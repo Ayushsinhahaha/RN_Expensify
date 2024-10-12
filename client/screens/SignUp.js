@@ -11,15 +11,24 @@ import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {categories} from '../constants';
 import {useNavigation} from '@react-navigation/native';
+import Snackbar from 'react-native-snackbar';
+import {auth} from '../config/firebase';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
 
-const SignUp = props => {
+const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
-  const handleAddTrip = () => {
+  const handleSignUp = async () => {
     if (email && password) {
-      navigation.navigate('Home');
+      // navigation.navigate('');
+      await createUserWithEmailAndPassword(auth, email, password);
+    } else {
+      Snackbar.show({
+        text: 'Email and Password are required!',
+        backgroundColor: 'red',
+      });
     }
   };
 
@@ -61,7 +70,7 @@ const SignUp = props => {
       {/* Add Button */}
       <View style={{alignItems: 'center', bottom: 50}}>
         <TouchableOpacity
-          onPress={() => handleAddTrip()}
+          onPress={() => handleSignUp()}
           style={styles.inputBtn}>
           <Text style={styles.inputText}>Sign Up</Text>
         </TouchableOpacity>
