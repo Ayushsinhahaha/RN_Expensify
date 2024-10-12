@@ -12,33 +12,22 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {categories} from '../constants';
 import {useNavigation} from '@react-navigation/native';
 
-const AddExpenseScreen = props => {
-  const [category, setCategory] = useState('');
-  const [expenseTitle, setExpenseTitle] = useState('');
-  const [amount, setAmount] = useState('');
+const SignUp = props => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  const data = props.route;
-  console.log('data in expense screen:::::', data);
 
   const handleAddTrip = () => {
-    if (expenseTitle && amount && category) {
-      props.navigation.goBack();
+    if (email && password) {
+      navigation.navigate('Home');
     }
   };
-
-  const userData = {
-    expenseTitle,
-    amount,
-    category,
-  };
-
-  // console.log('selected cate', category);
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Add Expense</Text>
+        <Text style={styles.headerText}>Sign Up</Text>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.arrow}>
@@ -48,64 +37,40 @@ const AddExpenseScreen = props => {
       {/* Image */}
       <View style={styles.imgContainer}>
         <Image
-          source={require('../assets/images/expenseBanner.png')}
+          source={require('../assets/images/login.png')}
           style={styles.image}
         />
       </View>
 
       {/* TextInputs */}
       <View style={styles.textContainer}>
-        <Text style={styles.textInput}>For What?</Text>
+        <Text style={styles.textInput}>Email</Text>
         <TextInput
-          value={expenseTitle}
-          onChangeText={txt => setExpenseTitle(txt)}
+          value={email}
+          onChangeText={txt => setEmail(txt)}
           style={styles.input}></TextInput>
-        <Text style={styles.textInput}>How Much?</Text>
+        <Text style={styles.textInput}>Password</Text>
         <TextInput
-          value={amount}
-          onChangeText={txt => setAmount(txt)}
+          secureTextEntry
+          value={password}
+          onChangeText={txt => setPassword(txt)}
           style={styles.input}></TextInput>
-        <Text style={styles.textInput}>Category</Text>
-        {
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {categories.map(cat => {
-              let bgColor = 'dodgerblue';
-              if (cat.value === category) {
-                bgColor = 'orange';
-              }
-              return (
-                <TouchableOpacity
-                  onPress={() => setCategory(cat.value)}
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    margin: 5,
-                    // borderColor: '#fff',
-                    backgroundColor: bgColor,
-                  }}>
-                  <Text style={{padding: 5, fontWeight: '700'}}>
-                    {cat.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        }
       </View>
+      <Text style={styles.forgot}>Forgot Password?</Text>
 
       {/* Add Button */}
       <View style={{alignItems: 'center', bottom: 50}}>
         <TouchableOpacity
           onPress={() => handleAddTrip()}
           style={styles.inputBtn}>
-          <Text style={styles.inputText}>Add Expense</Text>
+          <Text style={styles.inputText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
-export default AddExpenseScreen;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
@@ -150,6 +115,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#000',
     marginTop: 10,
+    textAlign: 'left',
   },
   input: {
     width: '90%',
@@ -176,5 +142,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'dodgerblue',
     // marginBottom: 30,
     // left:50
+  },
+  forgot: {
+    textAlign: 'right',
+    right: 20,
+    top: 20,
+    color: 'dodgerblue',
+    fontSize: 22,
+    fontWeight: '700',
   },
 });

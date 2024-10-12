@@ -12,7 +12,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EmptyList from '../components/emptyList';
 import ExpenseCard from '../components/expenseCard';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const items = [
   {
@@ -41,15 +41,15 @@ const items = [
   },
 ];
 
-const TripExpensesScreen = ({navigation}) => {
-  const route = useRoute();
-  const data = route.params.item;
-  console.log('data:::', data);
+const TripExpensesScreen = props => {
+  const navigation = useNavigation();
+  const {place, state} = props.route.params;
+  console.log('data:::', props);
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerPlace}>{data.place}</Text>
+        <Text style={styles.headerPlace}>{place}</Text>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.arrow}>
@@ -67,7 +67,7 @@ const TripExpensesScreen = ({navigation}) => {
       <View style={styles.tripHeader}>
         <Text style={styles.tripText}>Expenses</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('AddExpense')}
+          onPress={() => props.navigation.navigate('AddExpense')}
           style={styles.addTrip}>
           <Text style={styles.addTripText}>Add Expense</Text>
         </TouchableOpacity>

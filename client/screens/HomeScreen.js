@@ -77,7 +77,7 @@ const HomeScreen = ({navigation}) => {
           return (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => navigation.navigate('TripExpense', {item})}>
+              onPress={() => navigation.navigate('TripExpense', {...item})}>
               <View>
                 <Image source={randomImage()} style={styles.cardImage} />
                 <Text style={styles.placeText}>{item.place}</Text>
