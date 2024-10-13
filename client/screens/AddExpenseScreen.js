@@ -11,18 +11,39 @@ import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {categories} from '../constants';
 import {useNavigation} from '@react-navigation/native';
+import Snackbar from 'react-native-snackbar';
+import {addDoc} from 'firebase/firestore';
+import {expenseRef} from '../config/firebase';
+import Loading from '../components/loading';
 
 const AddExpenseScreen = props => {
+  let {id} = props.route.params;
   const [category, setCategory] = useState('');
   const [expenseTitle, setExpenseTitle] = useState('');
   const [amount, setAmount] = useState('');
   const navigation = useNavigation();
   const data = props.route;
-  console.log('data in expense screen:::::', data);
+  // console.log('data in expense screen:::::', data);
+  const [loading, setLoading] = useState(false);
 
-  const handleAddTrip = () => {
+  const handleAddTrip = async () => {
     if (expenseTitle && amount && category) {
-      props.navigation.goBack();
+      setLoading(true);
+      let doc = await addDoc(expenseRef, {
+        expenseTitle,
+        amount,
+        category,
+        tripId: id,
+      });
+      setLoading(false);
+      if (doc && doc.id) {
+        navigation.goBack();
+      }
+    } else {
+      Snackbar.show({
+        text: 'Please Fill all the fields!',
+        backgroundColor: 'red',
+      });
     }
   };
 
@@ -95,11 +116,15 @@ const AddExpenseScreen = props => {
 
       {/* Add Button */}
       <View style={{alignItems: 'center', bottom: 50}}>
-        <TouchableOpacity
-          onPress={() => handleAddTrip()}
-          style={styles.inputBtn}>
-          <Text style={styles.inputText}>Add Expense</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <Loading />
+        ) : (
+          <TouchableOpacity
+            onPress={() => handleAddTrip()}
+            style={styles.inputBtn}>
+            <Text style={styles.inputText}>Add Expense</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

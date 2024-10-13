@@ -7,44 +7,39 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import EmptyList from '../components/emptyList';
 import ExpenseCard from '../components/expenseCard';
-import {useNavigation, useRoute} from '@react-navigation/native';
-
-const items = [
-  {
-    id: 1,
-    title: 'Drank Coffee',
-    amount: 139,
-    category: 'Food',
-  },
-  {
-    id: 2,
-    title: 'Petrol',
-    amount: 379,
-    category: 'Travel',
-  },
-  {
-    id: 3,
-    title: 'Bought Shirt',
-    amount: 429,
-    category: 'Shopping',
-  },
-  {
-    id: 4,
-    title: 'Paragliding',
-    amount: 3999,
-    category: 'Travel',
-  },
-];
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import {getDocs, query, where} from 'firebase/firestore';
+import {expenseRef} from '../config/firebase';
 
 const TripExpensesScreen = props => {
   const navigation = useNavigation();
-  const {place, state} = props.route.params;
-  console.log('data:::', props);
+  const {id, place, state} = props.route.params;
+  const [expenses, setExpenses] = useState([]);
+
+  const isFocused = useIsFocused();
+
+  const fetchExpenses = async () => {
+    const q = query(expenseRef, where('tripId', '==', id));
+    let data = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(doc => {
+      console.log('DOcumnet DATAAAA in expense', doc.data());
+      data.push({...doc.data(), id: doc.id});
+    });
+    setExpenses(data);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchExpenses();
+    }
+  }, [isFocused]);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -67,14 +62,16 @@ const TripExpensesScreen = props => {
       <View style={styles.tripHeader}>
         <Text style={styles.tripText}>Expenses</Text>
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('AddExpense')}
+          onPress={() =>
+            props.navigation.navigate('AddExpense', {id, place, state})
+          }
           style={styles.addTrip}>
           <Text style={styles.addTripText}>Add Expense</Text>
         </TouchableOpacity>
       </View>
       {/* Flatlist */}
       <FlatList
-        data={items}
+        data={expenses}
         keyExtractor={item => item.id}
         ListEmptyComponent={
           <EmptyList message={"You haven't recorded any expenses yet"} />

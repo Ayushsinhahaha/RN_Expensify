@@ -16,7 +16,7 @@ const ExpenseCard = ({item}) => {
         backgroundColor: categoryBG[item.category],
       }}>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title}>{item.expenseTitle}</Text>
         <Text style={styles.category}>{item.category}</Text>
       </View>
       <View style={styles.amountView}>

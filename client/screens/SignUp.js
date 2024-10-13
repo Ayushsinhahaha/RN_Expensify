@@ -14,16 +14,31 @@ import {useNavigation} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {auth} from '../config/firebase';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {useDispatch, useSelector} from 'react-redux';
+import Loading from '../components/loading';
+
+import {setUserLoading} from '../redux/slices/user';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
+  const {userLoading} = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
   const handleSignUp = async () => {
     if (email && password) {
-      // navigation.navigate('');
-      await createUserWithEmailAndPassword(auth, email, password);
+      try {
+        dispatch(setUserLoading(true));
+        await createUserWithEmailAndPassword(auth, email, password);
+        dispatch(setUserLoading(false));
+      } catch (error) {
+        dispatch(setUserLoading(false));
+        Snackbar.show({
+          text: error.message,
+          backgroundColor: 'red',
+        });
+      }
     } else {
       Snackbar.show({
         text: 'Email and Password are required!',
@@ -69,11 +84,15 @@ const SignUp = () => {
 
       {/* Add Button */}
       <View style={{alignItems: 'center', bottom: 50}}>
-        <TouchableOpacity
-          onPress={() => handleSignUp()}
-          style={styles.inputBtn}>
-          <Text style={styles.inputText}>Sign Up</Text>
-        </TouchableOpacity>
+        {userLoading ? (
+          <Loading />
+        ) : (
+          <TouchableOpacity
+            onPress={() => handleSignUp()}
+            style={styles.inputBtn}>
+            <Text style={styles.inputText}>Sign Up</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

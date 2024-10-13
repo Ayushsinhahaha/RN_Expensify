@@ -7,20 +7,41 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Loading from '../components/loading';
+import Snackbar from 'react-native-snackbar';
+import {addDoc} from 'firebase/firestore';
+import {tripsRef} from '../config/firebase';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
-const AddTripScreen = ({navigation}) => {
-    const [place,setPlace]=useState('')
-    const [state,setState]=useState('')
+const AddTripScreen = () => {
+  const [place, setPlace] = useState('');
+  const [state, setState] = useState('');
+  const [loading, setLoading] = useState(false);
+  const {user} = useSelector(state => state.user);
+  const navigation = useNavigation();
 
-    const handleAddTrip =() => {
-        if(place && state){
-            navigation.navigate('Home',{place,state})
-        }else{
-
-        }
+  const handleAddTrip = async () => {
+    if (place && state) {
+      setLoading(true);
+      let doc = await addDoc(tripsRef, {
+        place,
+        state,
+        userId: user.uid,
+      });
+      setLoading(false);
+      if (doc && doc.id) {
+        navigation.navigate('Home');
+      }
+    } else {
+      Snackbar.show({
+        text: 'Place and State are required!',
+        backgroundColor: 'red',
+      });
     }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,16 +65,28 @@ const AddTripScreen = ({navigation}) => {
       {/* TextInputs */}
       <View style={styles.textContainer}>
         <Text style={styles.textInput}>Which Place?</Text>
-        <TextInput value={place} onChangeText={txt=>setPlace(txt)} style={styles.input}></TextInput>
+        <TextInput
+          value={place}
+          onChangeText={txt => setPlace(txt)}
+          style={styles.input}></TextInput>
         <Text style={styles.textInput}>Which State?</Text>
-        <TextInput value={state} onChangeText={txt=>setState(txt)} style={styles.input}></TextInput>
+        <TextInput
+          value={state}
+          onChangeText={txt => setState(txt)}
+          style={styles.input}></TextInput>
       </View>
 
       {/* Add Button */}
       <View style={{alignItems: 'center'}}>
-        <TouchableOpacity onPress={()=>handleAddTrip()} style={styles.inputBtn}>
-          <Text style={styles.inputText}>Add Trip</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <Loading />
+        ) : (
+          <TouchableOpacity
+            onPress={() => handleAddTrip()}
+            style={styles.inputBtn}>
+            <Text style={styles.inputText}>Add Trip</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -104,14 +137,14 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#000',
     marginTop: 10,
-},
-input: {
+  },
+  input: {
     width: '90%',
     borderWidth: 2,
     borderRadius: 20,
     backgroundColor: '#fff',
     marginTop: 10,
-    textAlign:'center'
+    textAlign: 'center',
   },
   inputText: {
     textAlign: 'center',
@@ -126,7 +159,7 @@ input: {
     borderRadius: 20,
     justifyContent: 'center',
     height: 60,
-    backgroundColor:'dodgerblue'
+    backgroundColor: 'dodgerblue',
     // left:50
   },
 });

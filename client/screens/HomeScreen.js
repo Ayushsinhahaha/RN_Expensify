@@ -7,42 +7,40 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import randomImage from '../assets/images/randomImage';
 import EmptyList from '../components/emptyList';
 import {useSelector} from 'react-redux';
 import {signOut} from 'firebase/auth';
-import {auth} from '../config/firebase';
+import {auth, tripsRef} from '../config/firebase';
+import {getDocs, query, where} from 'firebase/firestore';
+import {useIsFocused} from '@react-navigation/native';
 
 const handleLogout = async () => {
   return await signOut(auth);
 };
 
-const items = [
-  {
-    id: 1,
-    place: 'Noida',
-    state: 'Uttar Pradesh',
-  },
-  {
-    id: 2,
-    place: 'Patna',
-    state: 'Bihar',
-  },
-  {
-    id: 3,
-    place: 'Kochi',
-    state: 'Kerala',
-  },
-  {
-    id: 4,
-    place: 'Delhi',
-    state: 'New Delhi',
-  },
-];
-
 const HomeScreen = ({navigation}) => {
-  const user = useSelector(state => state.user);
+  const {user} = useSelector(state => state.user);
+  const [trips, setTrips] = useState([]);
+  const isFocused = useIsFocused();
+
+  const fetchTrips = async () => {
+    const q = query(tripsRef, where('userId', '==', user.uid));
+    let data = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(doc => {
+      console.log('DOcumnet DATAAAA', doc.data());
+      data.push({...doc.data(), id: doc.id});
+    });
+    setTrips(data);
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchTrips();
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -72,7 +70,7 @@ const HomeScreen = ({navigation}) => {
 
       {/* Flatlist */}
       <FlatList
-        data={items}
+        data={trips}
         numColumns={2}
         keyExtractor={item => item.id}
         ListEmptyComponent={
