@@ -11,12 +11,12 @@ import React from 'react';
 import randomImage from '../assets/images/randomImage';
 import EmptyList from '../components/emptyList';
 import {useSelector} from 'react-redux';
+import {signOut} from 'firebase/auth';
+import {auth} from '../config/firebase';
 
-// const signOut = () => {
-//   return(
-
-//   )
-// };
+const handleLogout = async () => {
+  return await signOut(auth);
+};
 
 const items = [
   {
@@ -49,7 +49,7 @@ const HomeScreen = ({navigation}) => {
       {/* header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Expensify</Text>
-        <TouchableOpacity style={styles.logBtn}>
+        <TouchableOpacity onPress={handleLogout} style={styles.logBtn}>
           <Text style={styles.logBtnText}>Logout</Text>
         </TouchableOpacity>
       </View>
