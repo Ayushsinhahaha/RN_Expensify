@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "598068866759",
+    "project_id": "expensify-3ec0a",
+    "storage_bucket": "expensify-3ec0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598068866759:android:398d054bc6377bef1798e2",
+        "android_client_info": {
+          "package_name": "com.expenseTracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwcMvuATh9lgfjcXRQTIQgak3ihy3bcpE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
